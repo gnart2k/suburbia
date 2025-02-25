@@ -47,7 +47,6 @@ const ProductList = async ({
   try {
     res =
       await productQuery.find();
-    res.items.map(i => console.log(i.price))
   } catch (e) {
     console.error(e);
   }

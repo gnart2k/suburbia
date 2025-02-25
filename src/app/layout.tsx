@@ -6,13 +6,15 @@ import Footer from "@/components/Footer";
 import { WixClientContextProvider } from "@/context/wixContext";
 import Script from "next/script";
 import GeminiContainer from "@/components/bot/GeminiContainer";
-
+import {
+  ClerkProvider,
+} from '@clerk/nextjs'
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Lama Dev E-Commerce Application",
-  description: "A complete e-commerce application with Next.js and Wix",
+  title: "Suburbia",
+  description: "E-Commerce application with Next.js and Wix",
 };
 
 export default function RootLayout({
@@ -21,6 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider>
     <html lang="en">
       <head>
         <Script
@@ -53,5 +56,6 @@ export default function RootLayout({
         </WixClientContextProvider>
       </body>
     </html>
+    </ClerkProvider>
   );
 }
