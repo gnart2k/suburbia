@@ -1,12 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SliderItem from "./SliderItem";
-import React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Carousel } from "@trendyol-js/react-carousel";
+
 const slides = [
   {
     id: 1,
@@ -34,22 +30,31 @@ const slides = [
   },
 ];
 
-
 const Sliders = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
+    }, 5000); // 5 seconds
+
+    return () => clearInterval(interval); // Clean up on component unmount
+  }, []);
+
   return (
     <div className="h-[calc(100vh-80px)] overflow-hidden w-full">
-      <Carousel
-        className="w-max h-full flex h-[calc(100vh-80px)]"
-        show={1}
-        slide={1}
-        transition={1}
-        autoSwipe={10000}
-        useArrowKeys
+      <div
+        className="w-full h-full flex transition-transform duration-1000 ease-in-out"
+        style={{
+          transform: `translateX(-${currentIndex * 100}%)`,
+        }}
       >
-        {slides.map((item: any, i: number) => (
-            <SliderItem slide={item}/>
+        {slides.map((slide, index) => (
+          <div key={slide.id} className="w-full h-full flex-shrink-0">
+            <SliderItem slide={slide} />
+          </div>
         ))}
-      </Carousel>
+      </div>
     </div>
   );
 };

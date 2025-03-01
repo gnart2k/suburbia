@@ -27,7 +27,7 @@
     text-decoration: none;
   }
     ul {
-    list-style-type: disc;
+    list-style-type: none;
     padding-left: theme(spacing.5);
     margin-bottom: theme(spacing.4);
   }
@@ -38,7 +38,8 @@
   }
   li {
     margin-bottom: theme(spacing.2);
-    font-size: theme(fontSize.sm)
+    font-size: theme(fontSize.sm);
+    text-decoration: none;
   }
 }
 llbar-hide::-webkit-scrollbar {

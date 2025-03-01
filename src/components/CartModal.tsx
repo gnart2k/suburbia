@@ -15,27 +15,27 @@ const CartModal = () => {
   const { cart, isLoading, removeItem } = useCartStore();
 
   const handleCheckout = async () => {
-    try {
-      const checkout =
-        await wixClient.currentCart.createCheckoutFromCurrentCart({
-          channelType: currentCart.ChannelType.WEB,
-        });
+    console.log(cart.lineItems);      
+    //   const checkout =
+    //     await wixClient.currentCart.createCheckoutFromCurrentCart({
+    //       channelType: currentCart.ChannelType.WEB,
+    //     });
 
-      const { redirectSession } =
-        await wixClient.redirects.createRedirectSession({
-          ecomCheckout: { checkoutId: checkout.checkoutId },
-          callbacks: {
-            postFlowUrl: window.location.origin,
-            thankYouPageUrl: `${window.location.origin}/success`,
-          },
-        });
+    //   const { redirectSession } =
+    //     await wixClient.redirects.createRedirectSession({
+    //       ecomCheckout: { checkoutId: checkout.checkoutId },
+    //       callbacks: {
+    //         postFlowUrl: window.location.origin,
+    //         thankYouPageUrl: `${window.location.origin}/success`,
+    //       },
+    //     });
 
-      if (redirectSession?.fullUrl) {
-        window.location.href = redirectSession.fullUrl;
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    //   if (redirectSession?.fullUrl) {
+    //     window.location.href = redirectSession.fullUrl;
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   return (
@@ -46,7 +46,7 @@ const CartModal = () => {
         <>
           <h2 className="text-xl">Shopping Cart</h2>
           {/* LIST */}
-          <div className="flex flex-col gap-8">
+          <div className="flex max-h-[400px] flex-col gap-8 overflow-auto">
             {/* ITEM */}
             {cart.lineItems.map((item) => (
               <div className="flex gap-4" key={item._id}>
@@ -85,6 +85,15 @@ const CartModal = () => {
                     <div className="text-sm text-gray-500">
                       {item.availability?.status}
                     </div>
+                    <div className="text-sm text-gray-500">
+                      {item.descriptionLines?.map((line, index) => {
+                        return (
+                          <div key={index}>
+                            <p>{line.name?.original}: {line?.plainText?.original}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                   {/* BOTTOM */}
                   <div className="flex justify-between text-sm">
@@ -105,6 +114,7 @@ const CartModal = () => {
           <div className="">
             <div className="flex items-center justify-between font-semibold">
               <span className="">Subtotal</span>
+              {/* @ts-ignore */}
               <span className="">{cart.subtotal.formattedAmount} </span>
             </div>
             <p className="text-gray-500 text-sm mt-2 mb-4">

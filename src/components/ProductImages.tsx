@@ -35,8 +35,8 @@ const ProductImages = ({ items }: { items: any }) => {
         )}
       </div>
       <Carousel
-        className="flex justify-between gap-2 mt-8"
-        show={5}
+        className="flex justify-between gap-4 mt-8"
+        show={4}
         slide={1}
         transition={0.5}
         useArrowKeys
@@ -44,12 +44,10 @@ const ProductImages = ({ items }: { items: any }) => {
         rightArrow={<ChevronRight className="mt-8 cursor-pointer" />}
       >
         {items.map((item: any, i: number) => (
-          <div key={item._id} className="relative">
+          <div key={item._id} className="mr-2">
             <Image
               onClick={() => {
                 setIndex((prevIndex) => {
-                  console.log("Previous index:", prevIndex);
-                  console.log("New index:", i);
                   return i;
                 });
               }}
@@ -59,9 +57,6 @@ const ProductImages = ({ items }: { items: any }) => {
               width={120}
               className="object-contain rounded-md cursor-pointer"
             />
-            {index === i && (
-              <div className="absolute inset-0 bg-white/60 backdrop-blur-lg rounded-md z-10"></div>
-            )}
           </div>
         ))}
       </Carousel>

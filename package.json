@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.12.0",
     "@google/generative-ai": "^0.2.1",
     "@trendyol-js/react-carousel": "^3.0.3",
     "@wix/ecom": "^1.0.540",
@@ -27,6 +28,7 @@
     "react-dom": "^18",
     "react-draggable": "^4.4.6",
     "react-markdown": "^9.0.3",
+    "resend": "^4.1.2",
     "tailwind-merge": "^3.0.1",
     "timeago.js": "^4.0.2",
     "zustand": "^4.5.2"
@@ -34,6 +36,7 @@
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
