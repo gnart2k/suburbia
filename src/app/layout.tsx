@@ -9,6 +9,7 @@ import GeminiContainer from "@/components/bot/GeminiContainer";
 import {
   ClerkProvider,
 } from '@clerk/nextjs'
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -54,6 +55,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </WixClientContextProvider>
+        <Toaster/>
       </body>
     </html>
     </ClerkProvider>

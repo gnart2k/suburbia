@@ -6,36 +6,47 @@ import { media as wixMedia } from "@wix/sdk";
 import { useWixClient } from "@/hooks/useWixClient";
 import { currentCart } from "@wix/ecom";
 import formatMoney from "@/lib/currencyFormater";
+import { handlePaymentAction } from "@/app/actions/payments/handle-payment";
+import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import toast from "react-hot-toast";
 
 const CartModal = () => {
   // TEMPORARY
   // const cartItems = true;
-
+  const router = useRouter();
   const wixClient = useWixClient();
   const { cart, isLoading, removeItem } = useCartStore();
+  const { isSignedIn, user, isLoaded } = useUser()
 
-  const handleCheckout = async () => {
-    console.log(cart.lineItems);      
-    //   const checkout =
-    //     await wixClient.currentCart.createCheckoutFromCurrentCart({
-    //       channelType: currentCart.ChannelType.WEB,
-    //     });
+  const handleCheckout = async () => {  
+    if(!isSignedIn){
+      toast.error('Please login to continue')
+      return
+    }
+    const paymentValues = {
+      id: Math.floor(Math.random() * 10000),
+      productName: cart.lineItems?.map(item => item.productName) ? cart.lineItems?.map(item => item.productName?.original).toString() : 'product empty' ,
+      //@ts-ignore
+      subtotal: +cart.subtotal.amount,
+      userId: user?.id ? user?.id : 'guest',
+      option: `${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${cart.lineItems?.map(item => item.quantity)}${Math.floor(Math.random() * 1000)}`,
+    };
+    const paymentResponse = await handlePaymentAction(
+      {
+        paymentMethod: 'payos',
+        values: paymentValues
+      }
+    );
+    console.log(paymentResponse)
+    if(paymentResponse.isSuccess){
+      if(paymentResponse.data.order_url) {
+        router.push(paymentResponse.data.order_url )
+      } else{
+        router.push(paymentResponse.data.checkoutUrl)
+      }
+    }
 
-    //   const { redirectSession } =
-    //     await wixClient.redirects.createRedirectSession({
-    //       ecomCheckout: { checkoutId: checkout.checkoutId },
-    //       callbacks: {
-    //         postFlowUrl: window.location.origin,
-    //         thankYouPageUrl: `${window.location.origin}/success`,
-    //       },
-    //     });
-
-    //   if (redirectSession?.fullUrl) {
-    //     window.location.href = redirectSession.fullUrl;
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
   };
 
   return (
