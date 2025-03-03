@@ -10,6 +10,7 @@ import { handlePaymentAction } from "@/app/actions/payments/handle-payment";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
+import Marquee from 'react-fast-marquee'
 
 const CartModal = () => {
   // TEMPORARY
@@ -19,14 +20,14 @@ const CartModal = () => {
   const { cart, isLoading, removeItem } = useCartStore();
   const { isSignedIn, user, isLoaded } = useUser()
 
-  const handleCheckout = async () => {  
-    if(!isSignedIn){
+  const handleCheckout = async () => {
+    if (!isSignedIn) {
       toast.error('Please login to continue')
       return
     }
     const paymentValues = {
       id: Math.floor(Math.random() * 10000),
-      productName: cart.lineItems?.map(item => item.productName) ? cart.lineItems?.map(item => item.productName?.original).toString() : 'product empty' ,
+      productName: cart.lineItems?.map(item => item.productName) ? cart.lineItems?.map(item => item.productName?.original).toString() : 'product empty',
       //@ts-ignore
       subtotal: +cart.subtotal.amount,
       userId: user?.id ? user?.id : 'guest',
@@ -39,10 +40,10 @@ const CartModal = () => {
       }
     );
     console.log(paymentResponse)
-    if(paymentResponse.isSuccess){
-      if(paymentResponse.data.order_url) {
-        router.push(paymentResponse.data.order_url )
-      } else{
+    if (paymentResponse.isSuccess) {
+      if (paymentResponse.data.order_url) {
+        router.push(paymentResponse.data.order_url)
+      } else {
         router.push(paymentResponse.data.checkoutUrl)
       }
     }
@@ -80,9 +81,11 @@ const CartModal = () => {
                   <div className="">
                     {/* TITLE */}
                     <div className="flex items-center justify-between gap-8">
+                      <Marquee className="max-w-[400px]" play={false}>
                       <h3 className="font-semibold">
                         {item.productName?.original}
                       </h3>
+                      </Marquee>
                       <div className="p-1 bg-gray-50 rounded-sm flex items-center gap-2">
                         {item.quantity && item.quantity > 1 && (
                           <div className="text-xs text-green-500">

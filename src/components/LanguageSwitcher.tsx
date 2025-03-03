@@ -58,11 +58,10 @@ const LanguageSwitcher = () => {
 
   const handleChange = (lang: string) => () => {
     switchLanguage(lang)
-
   }
 
   return (
-    <div className="text-center notranslate relative w-40 p-4 z-50" onMouseOver={() => setOnOpen(true)} onMouseOut={() => setOnOpen(false)}>
+    <div className="text-center notranslate relative w-40 p-4 z-10" onMouseOver={() => setOnOpen(true)} onMouseOut={() => setOnOpen(false)}>
       <div className="absolute top-0 flex flex-col bg-slate-100 transition-all duration-200 shadow-sm p-2 min-w-40 cursor-pointer rounded-lg text-slate-800 ">
         {languageConfig.languages.map((ld: LanguageDescriptor, i: number) => (
           <div key={i}>

@@ -45,13 +45,15 @@ export default function RootLayout({
         <div className="relative z-50 top-0 right-[200px]">
           <div className="fixed top-[800px] right-[450px]  w-24 " >
             {
-              <GeminiContainer />
+              // <GeminiContainer />
             }
           </div>
         </div>
 
         <WixClientContextProvider>
-          <Navbar />
+          <div className="sticky top-0 left-0 w-full z-50 bg-white/60 backdrop-blur-xl w-full">
+            <Navbar />
+          </div>
           {children}
           <Footer />
         </WixClientContextProvider>

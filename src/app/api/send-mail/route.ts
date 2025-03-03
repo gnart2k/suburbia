@@ -12,13 +12,13 @@ const transporter = nodemailer.createTransport({
 } as TransportOptions);
 
 export async function POST(request: Request) {
-
+  const body = await request.json()
   // Cấu hình email
   const mailOptions = {
-    from: '"Your App" <no-reply@demomailtrap.com>',
+    from: '"Suburbia" <no-reply@demomailtrap.com>',
     to: 'tunm17421@gmail.com',
-    subject: 'Hello from Node.js',
-    text: 'This is a test email sent from Node.js.',
+    subject: `${body.subject}`,
+    text: `${body.text}`,
   };
 
   try {

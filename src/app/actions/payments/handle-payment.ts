@@ -9,7 +9,7 @@ export type GenerateSignatureProps = {
   amount: string;
   cancelUrl: string;
   description: string;
-  orderCode: string;
+  orderCode: number;
   returnUrl: string;
 };
 
@@ -19,24 +19,24 @@ type Props = {
 }
 export async function handlePaymentAction({ values, paymentMethod }: Props): Promise<any> {
   const validData = paymentSchema.safeParse(values).data
-  console.log(values)
+  console.log(paymentMethod)
   if(!validData){
     return ({ data: null, isSuccess: false, message: "Định dạng dữ liệu sai" })
   }
-  if (paymentMethod == 'payos') {
+  if (paymentMethod == 'zalopay') {
     const billProps: GenerateSignatureProps = {
-      orderCode: validData.option,
-      amount: validData.subtotal.toString(),
+      orderCode: new Date().getTime(),
+      amount: (validData.subtotal/1000).toString(),
       description: `${validData.productName.split(' ').slice(-1)[0]}`,
-      cancelUrl: `${process.env.NEXT_PUBLIC_API_URL}/profile/booking-history`,
-      returnUrl: `${process.env.NEXT_PUBLIC_API_URL}/profile/booking-history`,
+      cancelUrl: `${process.env.NEXT_PUBLIC_API_URL}/`,
+      returnUrl: `${process.env.NEXT_PUBLIC_API_URL}/success`,
     }
     console.log(billProps)
 
     const paymentResponse = await handlePayOs({ props: billProps })
     try {
       if (!paymentResponse.isSuccess) {
-        return ({ data: null, isSuccess: false, message: "Payos hiện đang dừng họat động, vui lòng chọn phương thức thanh toán khác" })
+        return ({ data: null, isSuccess: false, message: "Zalopay hiện đang dừng họat động, vui lòng chọn phương thức thanh toán khác" })
 
       }
       if (paymentResponse.isSuccess) {

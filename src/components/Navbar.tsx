@@ -44,7 +44,7 @@ const Navbar = async () => {
           </div>
         </div>
         <div className="xl:w-2/12 w-0">
-        {/* <LanguageSwitcher /> */}
+        <LanguageSwitcher />
         </div>
       </div>
     </div>
