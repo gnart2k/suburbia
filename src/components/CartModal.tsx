@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 import Marquee from 'react-fast-marquee'
+import { createProduct } from "@/app/actions/product/create-product";
+import { createProductsFromCart } from "@/app/actions/product/create-many-product";
 
 const CartModal = () => {
   // TEMPORARY
@@ -21,10 +23,10 @@ const CartModal = () => {
   const { isSignedIn, user, isLoaded } = useUser()
 
   const handleCheckout = async () => {
-    if (!isSignedIn) {
-      toast.error('Please login to continue')
-      return
-    }
+    // if (!isSignedIn) {
+    //   toast.error('Please login to continue')
+    //   return
+    // }
     const paymentValues = {
       id: Math.floor(Math.random() * 10000),
       productName: cart.lineItems?.map(item => item.productName) ? cart.lineItems?.map(item => item.productName?.original).toString() : 'product empty',
@@ -33,20 +35,20 @@ const CartModal = () => {
       userId: user?.id ? user?.id : 'guest',
       option: `${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${cart.lineItems?.map(item => item.quantity)}${Math.floor(Math.random() * 1000)}`,
     };
-    const paymentResponse = await handlePaymentAction(
-      {
-        paymentMethod: 'payos',
-        values: paymentValues
-      }
-    );
-    console.log(paymentResponse)
-    if (paymentResponse.isSuccess) {
-      if (paymentResponse.data.order_url) {
-        router.push(paymentResponse.data.order_url)
-      } else {
-        router.push(paymentResponse.data.checkoutUrl)
-      }
-    }
+    createProductsFromCart(cart.lineItems)
+    // const paymentResponse = await handlePaymentAction(
+    //   {
+    //     paymentMethod: 'payos',
+    //     values: paymentValues
+    //   }
+    // );
+    // if (paymentResponse.isSuccess) {
+    //   if (paymentResponse.data.order_url) {
+    //     router.push(paymentResponse.data.order_url)
+    //   } else {
+    //     router.push(paymentResponse.data.checkoutUrl)
+    //   }
+    // }
 
   };
 
@@ -154,3 +156,4 @@ const CartModal = () => {
 };
 
 export default CartModal;
+
