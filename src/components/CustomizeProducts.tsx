@@ -19,7 +19,6 @@ const CustomizeProducts = ({
   const [selectedVariant, setSelectedVariant] = useState<products.Variant>();
 
   useEffect(() => {
-    console.log(productOptions)
     const variant = variants.find((v) => {
       const variantChoices = v.choices;
       if (!variantChoices) return false;

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,55 +8,63 @@ datasource db {
 }
 
 model Product {
-  id                         String  @id @default(uuid())
-  quantity                   Int
-  catalogItemId              String
-  appId                      String
-  variantId                  String
-  productNameOriginal        String
-  productNameTranslated      String
-  url                        String
-  priceAmount                Int
-  convertedPriceAmount       Int
-  priceFormatted             String
-  convertedPriceFormatted    String
-  fullPriceAmount            String
-  convertedFullPriceAmount   String
-  fullPriceFormatted         String
-  convertedFullPriceFormatted String
-  priceBeforeDiscountsAmount String
-  convertedPriceBeforeDiscountsAmount String
-  priceBeforeDiscountsFormatted String
+  id                                     String   @id @default(uuid())
+  quantity                               Int
+  catalogItemId                          String
+  appId                                  String
+  variantId                              String
+  productNameOriginal                    String
+  productNameTranslated                  String
+  url                                    String
+  priceAmount                            Int
+  convertedPriceAmount                   Int
+  priceFormatted                         String
+  convertedPriceFormatted                String
+  fullPriceAmount                        String
+  convertedFullPriceAmount               String
+  fullPriceFormatted                     String
+  convertedFullPriceFormatted            String
+  priceBeforeDiscountsAmount             String
+  convertedPriceBeforeDiscountsAmount    String
+  priceBeforeDiscountsFormatted          String
   convertedPriceBeforeDiscountsFormatted String
-  image                      String
-  availabilityStatus         String
-  quantityAvailable          Int
-  sku                        String
-  shippable                  Boolean
-  paymentOption              String
-  membersOnly                Boolean
-  rootCatalogItemId          String
-  customLineItem             Boolean
-  priceUndetermined          Boolean
-  fixedQuantity              Boolean
-  savePaymentMethod          Boolean
-  inventoryAppId             String
-  policies                   Json
-  createdAt                  DateTime @default(now())
-  updatedAt                  DateTime @updatedAt
+  image                                  String
+  availabilityStatus                     String
+  quantityAvailable                      Int
+  sku                                    String
+  shippable                              Boolean
+  paymentOption                          String
+  membersOnly                            Boolean
+  rootCatalogItemId                      String
+  customLineItem                         Boolean
+  priceUndetermined                      Boolean
+  fixedQuantity                          Boolean
+  savePaymentMethod                      Boolean
+  inventoryAppId                         String
+  policies                               Json
+  createdAt                              DateTime @default(now())
+  updatedAt                              DateTime @updatedAt
 }
 
+model UserInfo {
+  id              String @id @default(cuid())
+  firstName       String
+  lastName        String
+  email           String @unique
+  phone           String
+  shippingAddress String
+  province        String
+  district        String
+  ward            String
+  addressDetail   String
+}
 
 model Order {
-  id          String    @id @default(cuid())
-  userId      String
-  orderId     String
-  productName String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime?
-  status      String? //pending, processing, paid, delivered, canceled, completed
-  amount      String
-  paymentUrl  String?
-  user_name   String
-  address     String
+  id         String    @id @default(cuid())
+  userInfoid String
+  status     String?   @default("processing")
+  amount     String
+  paymentUrl String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime?
 }

@@ -6,3 +6,11 @@ export const zalopayConfig = {
 };
 
 export const addressApi = 'https://provinces.open-api.vn/api'
+
+export enum OrderStatus {
+    Processing = "processing",
+    Paid = "paid",
+    Delivered = "delivered",
+    Canceled = "canceled",
+    Completed = "completed",
+  }

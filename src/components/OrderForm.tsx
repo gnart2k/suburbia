@@ -14,29 +14,25 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import toast from "react-hot-toast"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useTransition } from "react"
 import axios from "axios"
 import { addressApi } from "@/lib/const"
 import PreviousMap from "postcss/lib/previous-map"
+import { OrderFormSchema } from "@/app/schema"
+import { useUser } from "@clerk/nextjs"
+import { updateUserInfo } from "@/app/actions/order/user-action"
 
 
 // Extend your validation schema to include the address selections
-const FormSchema = z.object({
-  firstName: z.string().min(2, { message: "First name must be at least 2 characters." }),
-  lastName: z.string().min(2, { message: "Last name must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  phone: z.string().min(10, { message: "Phone number must be at least 10 digits." }),
-  shippingAddress: z.string().min(5, { message: "Shipping address must be at least 5 characters." }),
-  province: z.string().min(1, { message: "Please select a province." }),
-  district: z.string().min(1, { message: "Please select a district." }),
-  ward: z.string().min(1, { message: "Please select a ward." }),
-})
+
 
 export default function OrderForm() {
   const [provinces, setProvinces] = useState<ProvinceType[]>([])
   const [districts, setDistricts] = useState<DistrictType[]>([])
   const [wards, setWards] = useState<WardType[]>([])
-const [userAddress, setUserAddress] = useState<UserAddressType>();
+  const [userAddress, setUserAddress] = useState<UserAddressType>();
+  const { user } = useUser();
+  const [isPending, startTransition] = useTransition();
   // Fetch provinces on mount
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -50,8 +46,8 @@ const [userAddress, setUserAddress] = useState<UserAddressType>();
     fetchProvinces()
   }, [])
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof OrderFormSchema>>({
+    resolver: zodResolver(OrderFormSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -73,8 +69,8 @@ const [userAddress, setUserAddress] = useState<UserAddressType>();
     if (selectedProvinceCode) {
       axios
         .get(`${addressApi}/p/${selectedProvinceCode}`, {
-            params: { depth: 2 },
-          })
+          params: { depth: 2 },
+        })
         .then((response) => {
           setDistricts(response.data.districts)
           setUserAddress(prev => {
@@ -104,8 +100,8 @@ const [userAddress, setUserAddress] = useState<UserAddressType>();
     if (selectedDistrictCode) {
       axios
         .get(`${addressApi}/d/${selectedDistrictCode}`, {
-            params: { depth: 2 },
-          })
+          params: { depth: 2 },
+        })
         .then((response) => {
           setWards(response.data.wards)
           console.log(response.data.wards)
@@ -128,26 +124,38 @@ const [userAddress, setUserAddress] = useState<UserAddressType>();
 
   useEffect(() => {
     if (selectedWardCode) {
-        const selectedWard = wards.find((ward) => ward.code === parseInt(selectedWardCode))
-        if (selectedWard) {
-          setUserAddress(prev => {
-            if (!prev) {
-              return { ward: selectedWard } as UserAddressType;
-            }
-            return { ...prev, ward: selectedWard };
-          });
-        }
+      const selectedWard = wards.find((ward) => ward.code === parseInt(selectedWardCode))
+      if (selectedWard) {
+        setUserAddress(prev => {
+          if (!prev) {
+            return { ward: selectedWard } as UserAddressType;
+          }
+          return { ...prev, ward: selectedWard };
+        });
+      }
     } else {
       setWards([])
       form.setValue("ward", "")
     }
   }, [selectedWardCode, form])
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data)
-    console.log(userAddress)
+  function onSubmit(data: z.infer<typeof OrderFormSchema>) {
+    if (!user) {
+      toast.error("Please login before checkout")
+      return;
+    }
+    data.userId = user?.id
+    data.addressDetail = userAddress?.address + ", " + userAddress?.ward?.name + ", " + userAddress?.district?.name + ", " + userAddress?.province?.name
+    startTransition(async function () {
+      const response = await updateUserInfo({values: data});
+      startTransition(() => {
+        console.log(response.data);
+      });
+    });
+
     toast.success("Order placed successfully!")
-    console.log("Order Data:", data)
+    console.log("Order Data:", data);
+
   }
 
   function onCancel() {
@@ -311,16 +319,16 @@ const [userAddress, setUserAddress] = useState<UserAddressType>();
               <FormItem>
                 <FormLabel>Shipping Address</FormLabel>
                 <FormControl onChange={(e) => {
-                    setUserAddress(prev => {
-                      if (!prev) {
-                        //@ts-ignore
-                        return { address: e.target.value } as UserAddressType;
-                      }
-                        //@ts-ignore
-                      return { ...prev, address: e.target.value };
-                    });
-                  }}>
-                  <Input placeholder="123 Main St, City, Country" {...field}/>
+                  setUserAddress(prev => {
+                    if (!prev) {
+                      //@ts-ignore
+                      return { address: e.target.value } as UserAddressType;
+                    }
+                    //@ts-ignore
+                    return { ...prev, address: e.target.value };
+                  });
+                }}>
+                  <Input placeholder="123 Main St, City, Country" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
