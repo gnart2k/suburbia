@@ -1,9 +1,17 @@
-import OrderForm from "@/components/OrderForm";
+"use client";
 
-export default function OrderPage(){
-  return(
-    <div className="flex w-full h-full justify-center">
-      <OrderForm/>
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+
+
+
+const Test = () => {
+
+  return (
+    <div id="google_translate_element" className="p-4 bg-gray-100 rounded-md">
+      hello
+      <LanguageSwitcher/>
     </div>
-  )
-}
+  );
+};
+
+export default Test;

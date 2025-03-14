@@ -36,7 +36,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
         <Script
-          src="//translate.google.com/translate_a/element.js?cb=TranslateInit"
+          src="https://translate.google.com/translate_a/element.js?cb=TranslateInit"
           strategy="afterInteractive"
         />
       </head>

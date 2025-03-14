@@ -23,7 +23,7 @@ export async function handlePaymentAction({ values, paymentMethod }: Props): Pro
   if(!validData){
     return ({ data: null, isSuccess: false, message: "Định dạng dữ liệu sai" })
   }
-  if (paymentMethod == 'zalopay') {
+  if (paymentMethod == 'payos') {
     const billProps: GenerateSignatureProps = {
       orderCode: new Date().getTime(),
       amount: (validData.subtotal/1000).toString(),
@@ -59,10 +59,9 @@ export async function handlePaymentAction({ values, paymentMethod }: Props): Pro
       // await prismadb.request.delete({ where: { id: +requestId } })
       return ({ data: null, isSuccess: false, message: "failed when create payment link at payos" })
     }
-  } else if (paymentMethod == "payos") {
+  } else if (paymentMethod == "zalopay") {
     try {
-
-      const zalopayPaymentResponse = await ZaloPay({ props: { description: `Thanh toan cho san pham: ${validData.productName}`, amount: +validData.subtotal, app_trans_id: validData.option, app_user: validData.userId, items: [] } })
+      const zalopayPaymentResponse = await ZaloPay({ props: { description: `Thanh toan cho san pham: ${validData.productName}`, amount: +validData.subtotal / 1000, app_trans_id: validData.orderId ?? validData.option, app_user: validData.userId, items: [] } })
       console.log(zalopayPaymentResponse);
       if (!zalopayPaymentResponse) {
         return ({ data: null, isSuccess: false, message: "Vui long thu lai" })
@@ -89,7 +88,6 @@ export async function handlePaymentAction({ values, paymentMethod }: Props): Pro
       // await prismadb.request.delete({ where: { id: +requestId } })
       return ({ data: null, isSuccess: false, message: "error" })
     }
-    return ({ data: null, isSuccess: false, message: "error" })
   } else {
     return ({ data: null, isSuccess: false, message: "Phương thức thanh toán không h��p lệ" })
   }

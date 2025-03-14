@@ -1,65 +1,26 @@
-import { wixClientServer } from "@/lib/wixClientServer";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { getProductsAction } from "@/app/actions/product/get-product";
+import OrderForm from "@/components/OrderForm";
+import ProductListView from "@/components/ProductListView";
 
-const OrderPage = async ({ params }: { params: { id: string } }) => {
-  const id = params.id;
-
-  const wixClient = await wixClientServer();
-
-  let order;
-  try {
-    order = await wixClient.orders.getOrder(id);
-  } catch (err) {
-    return notFound();
-  }
-
+export default async function OrderPage({ params: { id } }: { params: { id: string } }) {
+  let quantityList:number[] = []
+  const splittedIds = id.split('%7C').map((item) => {
+    const quantity = item.split('%5E')[1]
+    quantityList.push(+quantity)
+    if(item.length > 4){
+      return item.slice(0, -4);
+    }
+    return item
+  });
+  const productList = await getProductsAction(splittedIds);
   return (
-    <div className="flex flex-col h-[calc(100vh-180px)] items-center justify-center ">
-      <div className="shadow-[rgba(0,_0,_0,_0.25)_0px_25px_50px_-12px] px-40 py-20">
-      <h1 className="text-xl">Order Details</h1>
-      <div className="mt-12 flex flex-col gap-6">
-        <div className="">
-          <span className="font-medium">Order Id: </span>
-          <span>{order._id}</span>
-        </div>
-        <div className="">
-          <span className="font-medium">Receiver Name: </span>
-          <span>
-            {order.billingInfo?.contactDetails?.firstName + " "}
-            {order.billingInfo?.contactDetails?.lastName}
-          </span>
-        </div>
-        <div className="">
-          <span className="font-medium">Receiver Email: </span>
-          <span>{order.buyerInfo?.email}</span>
-        </div>
-        <div className="">
-          <span className="font-medium">Price: </span>
-          <span>{order.priceSummary?.subtotal?.amount}</span>
-        </div>
-        <div className="">
-          <span className="font-medium">Payment Status: </span>
-          <span>{order.paymentStatus}</span>
-        </div>
-        <div className="">
-          <span className="font-medium">Order Status: </span>
-          <span>{order.status}</span>
-        </div>
-        <div className="">
-          <span className="font-medium">Delivery Address: </span>
-          <span>
-            {order.billingInfo?.address?.addressLine1 + " "}
-            {order.billingInfo?.address?.city}
-          </span>
-        </div>
+    <div className="flex w-full h-full justify-center items-center justify-center">
+      <div className="m-8 w-4/12 border rounded-lg border-gray-300 p-4 mt-20">
+        <ProductListView items={productList} quantity={quantityList} />
       </div>
+      <div>
+        <OrderForm productList={splittedIds} quantity={quantityList}/>
       </div>
-      <Link href="/" className="underline mt-6">
-        Have a problem? Contact us
-      </Link>
     </div>
-  );
-};
-
-export default OrderPage;
+  )
+}

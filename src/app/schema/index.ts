@@ -6,6 +6,7 @@ export const paymentSchema = z.object({
     subtotal: z.number(),
     userId: z.string(),
     option: z.string(),
+    orderId: z.string().optional()
 })
 
 export const OrderFormSchema = z.object({
@@ -18,5 +19,6 @@ export const OrderFormSchema = z.object({
     province: z.string().min(1, { message: "Please select a province." }),
     district: z.string().min(1, { message: "Please select a district." }),
     ward: z.string().min(1, { message: "Please select a ward." }),
-    addressDetail: z.string().optional()
+    addressDetail: z.string().optional(),
+    productList: z.array(z.string()).optional(),
 })

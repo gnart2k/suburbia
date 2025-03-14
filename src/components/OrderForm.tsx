@@ -20,19 +20,27 @@ import { addressApi } from "@/lib/const"
 import PreviousMap from "postcss/lib/previous-map"
 import { OrderFormSchema } from "@/app/schema"
 import { useUser } from "@clerk/nextjs"
-import { updateUserInfo } from "@/app/actions/order/user-action"
+import { getUserAddress } from "@/app/actions/order/user-action"
+import { User } from "@clerk/nextjs/server"
+import { UserInfo } from "@prisma/client"
+import { createOrder } from "@/app/actions/order/handle-order"
+import { useRouter } from "next/navigation"
 
 
 // Extend your validation schema to include the address selections
 
 
-export default function OrderForm() {
+export default function OrderForm({ productList, quantity }: { productList: string[], quantity:number[]}) {
   const [provinces, setProvinces] = useState<ProvinceType[]>([])
   const [districts, setDistricts] = useState<DistrictType[]>([])
   const [wards, setWards] = useState<WardType[]>([])
   const [userAddress, setUserAddress] = useState<UserAddressType>();
   const { user } = useUser();
+  const router = useRouter();
+
   const [isPending, startTransition] = useTransition();
+
+  const [existedAddress, setExistedAddress] = useState<UserInfo>();
   // Fetch provinces on mount
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -43,8 +51,25 @@ export default function OrderForm() {
         console.error("Error fetching provinces", error)
       }
     }
+
+
     fetchProvinces()
   }, [])
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        if (user) {
+          const _existedAddress = await getUserAddress(user?.id);
+          setExistedAddress(_existedAddress.data)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    fetchUserInfo()
+
+  }, [user?.id])
 
   const form = useForm<z.infer<typeof OrderFormSchema>>({
     resolver: zodResolver(OrderFormSchema),
@@ -146,16 +171,21 @@ export default function OrderForm() {
     }
     data.userId = user?.id
     data.addressDetail = userAddress?.address + ", " + userAddress?.ward?.name + ", " + userAddress?.district?.name + ", " + userAddress?.province?.name
+    data.productList = productList
     startTransition(async function () {
-      const response = await updateUserInfo({values: data});
-      startTransition(() => {
-        console.log(response.data);
-      });
+      const paymentResponse = await createOrder({ values: data, quantity: quantity});
+      if (!paymentResponse?.isSuccess) {
+        toast.error("Order failed")
+        return;
+      }
+      console.log(paymentResponse)
+      if (paymentResponse?.data?.order_url) {
+        window.location.href = paymentResponse?.data.order_url
+      } else if(paymentResponse?.data?.checkoutUrl){
+        router.push(paymentResponse?.data.checkoutUrl)
+      }
+      toast.success("Order placed successfully!")
     });
-
-    toast.success("Order placed successfully!")
-    console.log("Order Data:", data);
-
   }
 
   function onCancel() {
@@ -168,6 +198,12 @@ export default function OrderForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6 mt-12">
         <h2>Complete your order</h2>
         <div className="mt-8 grid grid-cols-2 gap-4">
+          {/* {existedAddress && (
+            <div>
+              {existedAddress?.firstName}
+              {existedAddress?.addressDetail}
+            </div>
+          )} */}
           {/* First Name */}
           <FormField
             control={form.control}

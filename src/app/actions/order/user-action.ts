@@ -9,9 +9,9 @@ export async function updateUserInfo({ values }: { values: z.infer<typeof OrderF
         if (!validationResult.success) {
             return { data: null, isSuccess: false, message: "Định dạng dữ liệu sai" };
         }
-        
+
         const validData = validationResult.data;
-        
+
         // const userInfo = await prismadb.userInfo.create({
         //     data: {
         //         id: validData.userId,
@@ -28,10 +28,10 @@ export async function updateUserInfo({ values }: { values: z.infer<typeof OrderF
         // })
 
         const userInfo = await prismadb.userInfo.upsert({
-            where:{
+            where: {
                 id: validData.userId ?? ""
             },
-            update:{
+            update: {
                 addressDetail: validData.addressDetail ?? "",
                 district: validData.district,
                 email: validData.email,
@@ -42,7 +42,7 @@ export async function updateUserInfo({ values }: { values: z.infer<typeof OrderF
                 ward: validData.ward,
                 shippingAddress: validData.shippingAddress,
             },
-            create:{
+            create: {
                 id: validData.userId,
                 addressDetail: validData.addressDetail ?? "",
                 district: validData.district,
@@ -57,7 +57,7 @@ export async function updateUserInfo({ values }: { values: z.infer<typeof OrderF
         })
 
         console.log("user Info: " + userInfo)
-        
+
         return { data: validData, isSuccess: true, message: "Success" };
     } catch (e) {
         return { data: null, isSuccess: false, message: "Error processing request" };
@@ -65,7 +65,15 @@ export async function updateUserInfo({ values }: { values: z.infer<typeof OrderF
 }
 
 
-export async function getUserAddress():Promise<ActionResponseType>{
-    return { data: null, isSuccess: false, message: "Error processing request" };
-
+export async function getUserAddress(userId: string): Promise<ActionResponseType> {
+    try {
+        const userInfo = await prismadb.userInfo.findFirst({
+            where: {
+                id: userId
+            }
+        });
+        return { data: userInfo, isSuccess: true, message: "Success" };
+    } catch (e) {
+        return { data: null, isSuccess: false, message: "Error processing request" };
+    }
 }

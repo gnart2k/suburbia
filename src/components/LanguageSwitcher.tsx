@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
-import { parseCookies, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { cn } from "@/lib/utils";
 import { Globe } from "lucide-react";
 
@@ -26,9 +26,11 @@ const LanguageSwitcher = () => {
   const [onOpen, setOnOpen] = useState<boolean>(false)
 
   useEffect(() => {
-    const cookies = parseCookies()
+    const cookies = parseCookies();
     const existingLanguageCookieValue = cookies[COOKIE_NAME];
-
+  
+    console.log("Existing Cookie Value:", existingLanguageCookieValue);
+  
     let languageValue;
     if (existingLanguageCookieValue) {
       const sp = existingLanguageCookieValue.split("/");
@@ -36,23 +38,38 @@ const LanguageSwitcher = () => {
         languageValue = sp[2];
       }
     }
+  
+    console.log("Extracted Language Value:", languageValue);
+  
     if (global.__GOOGLE_TRANSLATION_CONFIG__ && !languageValue) {
       languageValue = global.__GOOGLE_TRANSLATION_CONFIG__.defaultLanguage;
     }
+  
+    console.log("Final Language Value:", languageValue);
+  
     if (languageValue) {
       setCurrentLanguage(languageValue);
     }
+  
     if (global.__GOOGLE_TRANSLATION_CONFIG__) {
       setLanguageConfig(global.__GOOGLE_TRANSLATION_CONFIG__);
     }
-  }, []);
+  }, [currentLanguage]);
+  
 
   if (!currentLanguage || !languageConfig) {
     return null;
   }
 
   const switchLanguage = (lang: string) => {
-    setCookie(null, COOKIE_NAME, "/auto/" + lang)
+
+    destroyCookie(null, COOKIE_NAME);
+
+    setCookie(null, COOKIE_NAME, "/auto/" + lang,{
+      domain: ".cloudworkstations.dev",
+      path: "/",
+    })
+    setCurrentLanguage(lang);
     window.location.reload();
   };
 

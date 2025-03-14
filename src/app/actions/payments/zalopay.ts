@@ -13,7 +13,7 @@ export type ZaloPayInputProps = {
 export async function ZaloPay({ props }: { props: ZaloPayInputProps }) {
   try {
     const embed_data = {
-      redirecturl: `${process.env.NEXT_PUBLIC_API_URL}/success`,
+      redirecturl: `${process.env.NEXT_PUBLIC_API_URL}/order-history`,
     };
     const items: any = props.items;
 
@@ -25,7 +25,7 @@ export async function ZaloPay({ props }: { props: ZaloPayInputProps }) {
       item: JSON.stringify(items),
       embed_data: JSON.stringify(embed_data),
       amount: props.amount,
-      callback_url: `${process.env.NEXT_PUBLIC_API_URL}/success`,
+      callback_url: `${process.env.NEXT_PUBLIC_API_URL}/order-history`,
       description: props.description,
       bank_code: "",
       mac: "",

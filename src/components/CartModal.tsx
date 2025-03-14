@@ -7,11 +7,10 @@ import { useWixClient } from "@/hooks/useWixClient";
 import { currentCart } from "@wix/ecom";
 import formatMoney from "@/lib/currencyFormater";
 import { handlePaymentAction } from "@/app/actions/payments/handle-payment";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 import Marquee from 'react-fast-marquee'
-import { createProduct } from "@/app/actions/product/create-product";
 import { createProductsFromCart } from "@/app/actions/product/create-many-product";
 
 const CartModal = () => {
@@ -35,21 +34,8 @@ const CartModal = () => {
       userId: user?.id ? user?.id : 'guest',
       option: `${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${cart.lineItems?.map(item => item.quantity)}${Math.floor(Math.random() * 1000)}`,
     };
-    createProductsFromCart(cart.lineItems)
-    // const paymentResponse = await handlePaymentAction(
-    //   {
-    //     paymentMethod: 'payos',
-    //     values: paymentValues
-    //   }
-    // );
-    // if (paymentResponse.isSuccess) {
-    //   if (paymentResponse.data.order_url) {
-    //     router.push(paymentResponse.data.order_url)
-    //   } else {
-    //     router.push(paymentResponse.data.checkoutUrl)
-    //   }
-    // }
-
+    const redirectResponse = await createProductsFromCart(cart.lineItems)
+    router.push(`/orders/${redirectResponse}`)
   };
 
   return (
@@ -145,7 +131,7 @@ const CartModal = () => {
                 disabled={isLoading}
                 onClick={handleCheckout}
               >
-                Checkout
+                Create Order
               </button>
             </div>
           </div>

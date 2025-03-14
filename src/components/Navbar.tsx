@@ -3,8 +3,8 @@ import Menu from "./Menu";
 import Image from "next/image";
 import SearchBar from "./SearchBar";
 import dynamic from "next/dynamic";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 import { wixClientServer } from "@/lib/wixClientServer";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const NavIcons = dynamic(() => import("./NavIcons"), { ssr: false });
 
@@ -44,7 +44,7 @@ const Navbar = async () => {
           </div>
         </div>
         <div className="xl:w-2/12 w-0">
-        <LanguageSwitcher />
+          <LanguageSwitcher/>
         </div>
       </div>
     </div>

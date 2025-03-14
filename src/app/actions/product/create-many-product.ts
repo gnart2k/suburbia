@@ -4,7 +4,7 @@ import prismadb from "@/lib/prisma";
 export async function createProductsFromCart(cartResponse: any) {
     try { 
       const result = await createManyProduct({lineItems:cartResponse});
-      console.log("Products successfully added to the database:", result);
+      return result
     } catch (error) {
       console.error("Failed to process cart response:", error);
     }
@@ -12,6 +12,7 @@ export async function createProductsFromCart(cartResponse: any) {
   
 
 export async function createManyProduct({lineItems}: {lineItems:Product[]}) {
+    const response = lineItems.map(product => `${product.rootCatalogItemId}^${product.quantity}|`).join('');
     const products = lineItems.map((product) => ({
       id: product.rootCatalogItemId,
       quantity: product.quantity,
@@ -49,6 +50,7 @@ export async function createManyProduct({lineItems}: {lineItems:Product[]}) {
       policies: product.policies, // JSON-compatible
     }));
   
-    return await prismadb.product.createMany({ data: products, skipDuplicates: true });
-  }
+    await prismadb.product.createMany({ data: products, skipDuplicates: true });
+    return response;
+}
   
