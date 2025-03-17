@@ -1,12 +1,39 @@
 "use client";
 
+import { useWixClient } from "@/hooks/useWixClient";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const Filter = ({catList}:{catList:any}) => {
+type categoryProps = {
+  name: string;
+  slug: string;
+}
+
+const Filter = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
-  console.log(catList)
+  const wixClient = useWixClient();
+  const [catList, setCatList] = useState<categoryProps[]>([])
+
+  useEffect(()=>{
+    const fetchCats = async () => {
+      const cats = await wixClient.collections
+        .queryCollections()
+        .limit(20)
+        .find();
+
+      const mappedCats = cats.items.map((cat) => ({
+        name: cat.name,
+        slug: cat.slug, // Assuming name can be used for slug, replace spaces with hyphens
+      }));
+      //@ts-ignore
+      setCatList(mappedCats);
+      console.log(cats)
+    }
+    fetchCats()
+  },[])
+
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
@@ -50,8 +77,9 @@ const Filter = ({catList}:{catList:any}) => {
           onChange={handleFilterChange}
         >
           <option>Category</option>
-          <option value="">New Arrival</option>
-          <option value="">Popular</option>
+          {catList.map((e, i) => (
+            <option key={i} value={e.slug}>{e.name}</option>
+          ))}
         </select>
         <select
           name=""

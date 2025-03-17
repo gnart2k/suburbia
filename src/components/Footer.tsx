@@ -58,19 +58,19 @@ const Footer = () => {
           </div>
         </div>
         {/* RIGHT */}
-        <div className="w-full md:w-1/2 lg:w-1/4 flex flex-col gap-8">
-          <h1 className="font-medium text-lg">SUBSCRIBE</h1>
-          <p>
-            Be the first to get the latest news about trends, promotions, and
-            much more!
+        <div className="w-full md:w-1/2 lg:w-1/4 flex flex-col gap-8 ">
+          <h1 className="font-medium text-lg">CONTACT US</h1>
+          <div>
+            <p>
+              If you have any questions or need assistance, feel free to contact us.
           </p>
-          <div className="flex">
-            <input
-              type="text"
-              placeholder="Email address"
-              className="p-4 w-3/4"
-            />
-            <button className="w-1/4 bg-lama text-white">JOIN</button>
+            <div className="flex mt-4">
+              <a href="mailto:suburbia@gmail.com" className="w-full">
+                <button className="w-full bg-lama text-white p-4 rounded-lg">
+                  SEND US MAIL
+                </button>
+              </a>
+            </div>
           </div>
           <span className="font-semibold">Secure Payments</span>
           <div className="flex justify-between">

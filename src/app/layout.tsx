@@ -27,6 +27,20 @@ export default function RootLayout({
     <ClerkProvider>
     <html lang="en">
       <head>
+      <link 
+            rel="preconnect" 
+            href="https://fonts.googleapis.com"
+          />
+          <link 
+            rel="preconnect" 
+            href="https://fonts.gstatic.com" 
+            crossOrigin="anonymous" 
+          />
+          <link 
+            href="https://fonts.googleapis.com/css2?family=Fleur+De+Leah&display=swap" 
+            rel="stylesheet" 
+          />
+          
         <Script
           src="/assets/scripts/lang-config.js"
           strategy="beforeInteractive"
