@@ -1,16 +1,22 @@
 "use client";
-
+import { useRouter } from "next/navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 
 
 const Test = () => {
+  const router = useRouter();
 
+  const handleClick = () => {
+    router.push("https://3000-idx-suburbia-1740016329860.cluster-e3wv6awer5h7kvayyfoein2u4a.cloudworkstations.dev/success?orderId=cm8b4gvxe0000jtvogli0f86u");
+  };
   return (
-    <div id="google_translate_element" className="p-4 bg-gray-100 rounded-md">
-      hello
-      <LanguageSwitcher/>
-    </div>
+    <button
+    onClick={handleClick}
+    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+  >
+    Go to Success Page
+  </button>
   );
 };
 

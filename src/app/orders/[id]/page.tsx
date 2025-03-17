@@ -12,7 +12,9 @@ export default async function OrderPage({ params: { id } }: { params: { id: stri
     }
     return item
   });
+  console.log(splittedIds)
   const productList = await getProductsAction(splittedIds);
+  console.log(productList.length)
   return (
     <div className="flex w-full h-full justify-center items-center justify-center">
       <div className="m-8 w-4/12 border rounded-lg border-gray-300 p-4 mt-20">

@@ -10,7 +10,6 @@ import Cookies from "js-cookie";
 import { useCartStore } from "@/hooks/useCartStore";
 import {
   SignInButton,
-  SignUpButton,
   SignedIn,
   SignedOut,
   UserButton,
@@ -39,12 +38,6 @@ const NavIcons = () => {
             <ChevronRight className="w-4" />
           </div>
         </SignInButton>
-        <SignUpButton>
-          <div className="flex items-center relative bg-gray-100 rounded-full hover:shadow-md cursor-pointer px-4 py-2 text-gray-600 font-semibold items-center justify-center">
-            <p>Register</p>
-            <Pencil className="w-4 ml-2" />
-          </div>
-        </SignUpButton>
       </SignedOut>
       <SignedIn>
         <div className="flex items-center gap-4 xl:gap-6 relative">

@@ -12,13 +12,56 @@ const SuccessPage = () => {
   useEffect(() => {
     if (!orderId) return;
 
-    const timer = setTimeout(() => {
-      router.push("/orders/" + orderId);
-    }, 5000);
+    // const fetchOrder = async ()=>{
+    //   const res = await fetch('/api/order/order-details', {
+    //     method: 'POST', 
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ orderId }),
+    //   });
 
-    return () => {
-      clearTimeout(timer);
+    //   console.log(res)
+    // }
+
+    // fetchOrder()
+
+    // Gọi API gửi email invoice
+    const sendInvoice = async () => {
+      try {
+        const response = await fetch('/api/send-mail', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ orderId }),
+          
+        });
+        console.log(response + 'success');
+
+        
+       
+        if (!response.ok) {
+          const data = await response.json();
+          console.error('Error sending invoice:', data.error);
+        } else {
+          const data = await response.json();
+          console.log('Invoice sent:', data.message);
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
     };
+
+    sendInvoice();
+
+    // const timer = setTimeout(() => {
+    //   router.push("/order-history/");
+    // }, 5000);
+
+    // return () => {
+    //   clearTimeout(timer);
+    // };
   }, [orderId, router]);
 
   return (

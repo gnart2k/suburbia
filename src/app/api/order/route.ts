@@ -19,6 +19,17 @@ export async function POST(req: NextRequest) {
             }
         })
         console.log(updatedOrder)
+    }else if(+status >0){
+        const updatedOrder = await prismadb.order.update({
+            where:{
+                userInfoid: userId,
+                id: orderId
+            },
+            data:{
+                status: OrderStatus.Paid
+            }
+        })
+        console.log(updatedOrder)
     }
 
     // Validate parameters
@@ -42,4 +53,6 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+
+  
 }

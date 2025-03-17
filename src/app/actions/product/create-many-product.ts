@@ -12,6 +12,7 @@ export async function createProductsFromCart(cartResponse: any) {
   
 
 export async function createManyProduct({lineItems}: {lineItems:Product[]}) {
+    console.log(lineItems.length)
     const response = lineItems.map(product => `${product.rootCatalogItemId}^${product.quantity}|`).join('');
     const products = lineItems.map((product) => ({
       id: product.rootCatalogItemId,

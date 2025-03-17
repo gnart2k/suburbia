@@ -2,11 +2,11 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-const Filter = () => {
+const Filter = ({catList}:{catList:any}) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
-
+  console.log(catList)
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {

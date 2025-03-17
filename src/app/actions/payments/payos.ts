@@ -3,6 +3,7 @@ import { GenerateSignatureProps } from "./handle-payment";
 
 export async function handlePayOs({ props }: { props: GenerateSignatureProps }) {
   const payOS = new PayOS(
+    //@ts-ignore
     process.env.x_client_id,
     process.env.x_api_key,
     process.env.checksum
