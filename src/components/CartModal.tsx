@@ -4,9 +4,6 @@ import Image from "next/image";
 import { useCartStore } from "@/hooks/useCartStore";
 import { media as wixMedia } from "@wix/sdk";
 import { useWixClient } from "@/hooks/useWixClient";
-import { currentCart } from "@wix/ecom";
-import formatMoney from "@/lib/currencyFormater";
-import { handlePaymentAction } from "@/app/actions/payments/handle-payment";
 import { redirect, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
@@ -14,18 +11,12 @@ import Marquee from 'react-fast-marquee'
 import { createProductsFromCart } from "@/app/actions/product/create-many-product";
 
 const CartModal = () => {
-  // TEMPORARY
-  // const cartItems = true;
   const router = useRouter();
   const wixClient = useWixClient();
   const { cart, isLoading, removeItem } = useCartStore();
   const { isSignedIn, user, isLoaded } = useUser()
 
   const handleCheckout = async () => {
-    // if (!isSignedIn) {
-    //   toast.error('Please login to continue')
-    //   return
-    // }
     const paymentValues = {
       id: Math.floor(Math.random() * 10000),
       productName: cart.lineItems?.map(item => item.productName) ? cart.lineItems?.map(item => item.productName?.original).toString() : 'product empty',
@@ -123,8 +114,8 @@ const CartModal = () => {
               Shipping and taxes calculated at checkout.
             </p>
             <div className="flex justify-between text-sm">
-              <button className="rounded-md py-3 px-4 ring-1 ring-gray-300">
-                View Cart
+              <button className="rounded-md py-3 px-4 ring-1 ring-gray-300" onClick={()=> router.push('/order-history')}>
+                View Order History
               </button>
               <button
                 className="rounded-md py-3 px-4 bg-black text-white disabled:cursor-not-allowed disabled:opacity-75"

@@ -41,7 +41,7 @@ const Navbar = () => {
       {/* MOBILE */}
       <div className="h-full flex items-center justify-between md:hidden">
         <Link href="/">
-          <svg width="300" height="100" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+          <svg width="160" height="100" viewBox="0 0 160 80" xmlns="http://www.w3.org/2000/svg">
             <rect width="100%" height="100%" fill="white" />
             <text
               x="50%"
@@ -62,7 +62,7 @@ const Navbar = () => {
         {/* LEFT */}
         <div className="w-1/3 xl:w-5/12 flex items-center gap-12">
           <Link href="/" className="flex items-center gap-3">
-            <svg width="300" height="100" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+            <svg width="200" height="100" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
               <rect width="100%" height="100%" fill="white" />
               <text
                 x="50%"
@@ -102,13 +102,13 @@ const Navbar = () => {
           </div>
         </div>
         {/* RIGHT */}
-        <div className="w-2/3 xl:w-5/12 flex items-center justify-between gap-8">
+        <div className="w-2/3 xl:w-5/12 md:w-8/12 flex items-center justify-between gap-8">
           <SearchBar />
           <div className="flex items-center gap-6">
             <NavIcons />
           </div>
         </div>
-        <div className="xl:w-2/12 w-0">
+        <div className="w-2/12 w-0">
           <LanguageSwitcher />
         </div>
       </div>

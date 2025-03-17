@@ -65,7 +65,7 @@ export default function RootLayout({
         </div>
 
         <WixClientContextProvider>
-          <div className="sticky top-0 left-0 w-full z-50 bg-white/60 backdrop-blur-xl w-full">
+          <div className="sticky top-0 left-0 w-full z-50 bg-white w-full">
             <Navbar />
           </div>
           {children}
