@@ -96,9 +96,12 @@ const ProductList = async ({
           )}
         </Link>
       ))}
+      {res?.items?.length == 0 && <div>
+        There are not product to show
+        </div>} 
       {searchParams?.cat || searchParams?.name ? (
         <Pagination
-          currentPage={res?.currentPage || 0} hasPrev={res?.hasPrev()} hasNext={res?.hasPrev()}
+          currentPage={res?.currentPage || 0} hasPrev={searchParams?.page != 0} hasNext={res?.items?.length ? res?.items?.length == PRODUCT_PER_PAGE : false}
         />
       ) : null}
     </div>

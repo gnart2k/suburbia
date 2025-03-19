@@ -17,16 +17,9 @@ const CartModal = () => {
   const { isSignedIn, user, isLoaded } = useUser()
 
   const handleCheckout = async () => {
-    const paymentValues = {
-      id: Math.floor(Math.random() * 10000),
-      productName: cart.lineItems?.map(item => item.productName) ? cart.lineItems?.map(item => item.productName?.original).toString() : 'product empty',
-      //@ts-ignore
-      subtotal: +cart.subtotal.amount,
-      userId: user?.id ? user?.id : 'guest',
-      option: `${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${cart.lineItems?.map(item => item.quantity)}${Math.floor(Math.random() * 1000)}`,
-    };
-    const redirectResponse = await createProductsFromCart(cart.lineItems)
-    router.push(`/orders/${redirectResponse}`)
+    console.log(cart.lineItems)
+    // const redirectResponse = await createProductsFromCart(cart.lineItems)
+    // router.push(`/orders/${redirectResponse}`)
   };
 
   return (
