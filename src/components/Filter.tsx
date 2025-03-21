@@ -39,6 +39,9 @@ const Filter = () => {
   ) => {
     const { name, value } = e.target;
     const params = new URLSearchParams(searchParams);
+    if (params.has("page")) {
+      params.delete("page");
+    }
     params.set(name, value);
     replace(`${pathname}?${params.toString()}`);
   };

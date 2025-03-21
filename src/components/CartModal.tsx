@@ -6,20 +6,36 @@ import { media as wixMedia } from "@wix/sdk";
 import { useWixClient } from "@/hooks/useWixClient";
 import { redirect, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import toast from "react-hot-toast";
 import Marquee from 'react-fast-marquee'
 import { createProductsFromCart } from "@/app/actions/product/create-many-product";
+import { useCheckoutProductStore } from "@/hooks/checkoutStore";
 
 const CartModal = () => {
   const router = useRouter();
   const wixClient = useWixClient();
   const { cart, isLoading, removeItem } = useCartStore();
   const { isSignedIn, user, isLoaded } = useUser()
+  const addProductToStore = useCheckoutProductStore((state) => state.setProducts);
 
   const handleCheckout = async () => {
     console.log(cart.lineItems)
-    // const redirectResponse = await createProductsFromCart(cart.lineItems)
-    // router.push(`/orders/${redirectResponse}`)
+    let addItem:CheckoutProductType[] = []
+    const checkoutItem = cart.lineItems?.map((item) =>{
+       addItem.push({
+        id: item?.catalogReference?.catalogItemId ? item?.catalogReference?.catalogItemId : "",
+        productName: item.productName?.original ? item.productName?.original : "product name" ,
+        price: item.price?.formattedAmount ? item?.price.formattedAmount : "",
+        quantity: item?.quantity ? item.quantity : 0,
+        productImage: item.image ? item.image : '',
+        size: item.descriptionLines ? item.descriptionLines.map(size => size.plainText?.original).join('') : '',
+        color: ''
+      })
+    })
+
+    //@ts-ignore
+    addProductToStore({productItems: addItem, subtotal: +cart.subtotal.amount})
+    const redirectResponse = await createProductsFromCart(cart.lineItems)
+    router.push(`/orders/${redirectResponse}`)
   };
 
   return (

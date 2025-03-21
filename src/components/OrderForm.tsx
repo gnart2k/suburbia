@@ -25,18 +25,20 @@ import { User } from "@clerk/nextjs/server"
 import { UserInfo } from "@prisma/client"
 import { createOrder } from "@/app/actions/order/handle-order"
 import { useRouter } from "next/navigation"
+import { useCheckoutProductStore } from "@/hooks/checkoutStore"
 
 
 // Extend your validation schema to include the address selections
 
 
-export default function OrderForm({ productList, quantity }: { productList: string[], quantity:number[]}) {
+export default function OrderForm() {
   const [provinces, setProvinces] = useState<ProvinceType[]>([])
   const [districts, setDistricts] = useState<DistrictType[]>([])
   const [wards, setWards] = useState<WardType[]>([])
   const [userAddress, setUserAddress] = useState<UserAddressType>();
   const { user } = useUser();
   const router = useRouter();
+  const cart = useCheckoutProductStore();
 
   const [isPending, startTransition] = useTransition();
 
@@ -171,9 +173,10 @@ export default function OrderForm({ productList, quantity }: { productList: stri
     }
     data.userId = user?.id
     data.addressDetail = userAddress?.address + ", " + userAddress?.ward?.name + ", " + userAddress?.district?.name + ", " + userAddress?.province?.name
-    data.productList = productList
+    data.productList = cart.products.productLine.map(item => item.id)
+    console.log(data)
     startTransition(async function () {
-      const paymentResponse = await createOrder({ values: data, quantity: quantity});
+      const paymentResponse = await createOrder({ values: data, subtotal: +cart.products.subtotal});
       if (!paymentResponse?.isSuccess) {
         toast.error("Order failed")
         return;

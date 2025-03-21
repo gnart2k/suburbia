@@ -6,5 +6,9 @@ type CheckoutProductType = {
     quantity: number,
     price: string
     productImage: string,
-    productLink: string,
+}
+
+type CartDataType = {
+    products: CheckoutProductType[]
+    subtotal: number
 }

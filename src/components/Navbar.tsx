@@ -41,8 +41,8 @@ const Navbar = () => {
       {/* MOBILE */}
       <div className="h-full flex items-center justify-between md:hidden">
         <Link href="/">
-          <svg width="160" height="100" viewBox="0 0 160 80" xmlns="http://www.w3.org/2000/svg">
-            <rect width="100%" height="100%" fill="white" />
+          <svg width="160" height="100" viewBox="0 0 160 80" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"transparent"}}>
+            <rect width="100%" height="100%" fill="none" />
             <text
               x="50%"
               y="50%"
@@ -63,7 +63,7 @@ const Navbar = () => {
         <div className="w-1/3 xl:w-5/12 flex items-center gap-12">
           <Link href="/" className="flex items-center gap-3">
             <svg width="200" height="100" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
-              <rect width="100%" height="100%" fill="white" />
+              <rect width="100%" height="100%" fill="none" />
               <text
                 x="50%"
                 y="50%"

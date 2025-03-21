@@ -13,7 +13,6 @@ export async function createProductsFromCart(cartResponse: any) {
 
 export async function createManyProduct({lineItems}: {lineItems:Product[]}) {
     console.log(lineItems.length)
-    const response = lineItems.map(product => `${product.rootCatalogItemId}^${product.quantity}|`).join('');
     const products = lineItems.map((product) => ({
       id: product.rootCatalogItemId,
       quantity: product.quantity,
@@ -51,7 +50,7 @@ export async function createManyProduct({lineItems}: {lineItems:Product[]}) {
       policies: product.policies, // JSON-compatible
     }));
   
-    await prismadb.product.createMany({ data: products, skipDuplicates: true });
-    return response;
+    const res = await prismadb.product.createMany({ data: products, skipDuplicates: true });
+    return res.count;
 }
   

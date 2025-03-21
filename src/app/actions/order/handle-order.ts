@@ -8,7 +8,7 @@ import { ProductPrismaType } from "@/lib/utils"
 import { handlePaymentAction } from "../payments/handle-payment"
 import { redirect } from "next/navigation"
 
-export async function createOrder({ values, quantity }: { values: z.infer<typeof OrderFormSchema>, quantity:number[] }) {
+export async function createOrder({ values, subtotal }: { values: z.infer<typeof OrderFormSchema>, subtotal:number}) {
     try {
         const userInfo = await updateUserInfo({ values: values })
         if (!userInfo.isSuccess) return { isSuccess: false }
@@ -38,14 +38,13 @@ export async function createOrder({ values, quantity }: { values: z.infer<typeof
                     id: { in: values.productList }, // Query all productIds at once
                 }
             });
-            const amount = _productList.reduce((sum, item, index) => sum + (item.convertedPriceAmount * quantity[index]), 0);
             
             await prismadb.order.update({
                 where: {
                     id: createdOrder.id,
                 },
                 data: {
-                    amount: amount.toString(),
+                    amount: subtotal.toString(),
                 }
             })
 
@@ -53,7 +52,7 @@ export async function createOrder({ values, quantity }: { values: z.infer<typeof
                 id: Math.floor(Math.random() * 10000),
                 productName: _productList.map(item => item.productNameOriginal) ? _productList.map(item => item.productNameOriginal).toString() : 'product empty',
                 //@ts-ignore
-               subtotal: _productList.reduce((sum, item, index) => sum + (item.convertedPriceAmount * quantity[index]), 0),
+                subtotal: subtotal,
                 userId: values.userId ? values.userId : 'guest',
                 option: `${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 1000)}`,
                 orderId: createdOrder.id

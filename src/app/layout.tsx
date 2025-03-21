@@ -57,7 +57,7 @@ export default function RootLayout({
 
       <body className={inter.className}>
         <div className="relative z-50 top-0 right-[200px]">
-          <div className="fixed top-[800px] right-[450px]  w-24 " >
+          <div className="fixed  top-[800px] right-[450px]  w-24 " >
             {
               // <GeminiContainer />
             }
@@ -65,7 +65,7 @@ export default function RootLayout({
         </div>
 
         <WixClientContextProvider>
-          <div className="sticky top-0 left-0 w-full z-50 bg-white w-full">
+          <div className="sticky top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-md w-full">
             <Navbar />
           </div>
           {children}
